@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PAIRS_CONFIG_PATH=.gitpairables
+PAIRS_CONFIG_PATH=~/.gitpairables
 
 command=$1
 
