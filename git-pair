@@ -23,6 +23,10 @@ if [ $command = 'add' ]; then
 fi
 
 if [ $command = 'set' ]; then
+	if [ -z $2 ]; then
+		exit 1
+	fi
+
 	if [ $2 = '--local' ]; then
 		num_args_to_drop=3
 		is_local=true
