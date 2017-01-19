@@ -2,15 +2,7 @@
 
 PAIRS_CONFIG_PATH=.gitpairables
 
-if [ $1 = '--local' ]; then
-	command=$2
-	num_args_to_drop=3
-	is_local=true
-else
-	command=$1
-	num_args_to_drop=2
-	is_local=false
-fi
+command=$1
 
 if [ $command = 'list' ]; then
 	cat $PAIRS_CONFIG_PATH
@@ -27,6 +19,14 @@ if [ $command = 'add' ]; then
 fi
 
 if [ $command = 'set' ]; then
+	if [ $2 = '--local' ]; then
+		num_args_to_drop=3
+		is_local=true
+	else
+		num_args_to_drop=2
+		is_local=false
+	fi
+
 	pair_nicks=(${@:$num_args_to_drop})
 
 	names=()
@@ -43,8 +43,15 @@ if [ $command = 'set' ]; then
 	email_ids=`printf "%s\n" "${emails[@]}" | cut -d@ -f1 | paste -d+ -s -`
 	email_host=`echo ${emails[0]} | cut -d@ -f2`
 
-	git config user.name "$names_joined"
-	git config user.email "$email_ids@$email_host"
+	if $is_local; then
+		git config user.name "$names_joined"
+		git config user.email "$email_ids@$email_host"
+	else
+		git config --unset user.name &> /dev/null
+		git config --unset user.email &> /dev/null
+		git config --global user.name "$names_joined"
+		git config --global user.email "$email_ids@$email_host"
+	fi
 
 	git config --get user.name
 	git config --get user.email
