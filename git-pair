@@ -4,7 +4,7 @@ PAIRS_CONFIG_PATH=~/.gitpairables
 
 command=$1
 
-if [ $command = 'list' ]; then
+if [ $command = 'list' ] || [ $command = 'ls' ]; then
 	cat $PAIRS_CONFIG_PATH
 	exit $?
 fi
