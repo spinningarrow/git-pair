@@ -1,4 +1,4 @@
-# git-pair.sh
+# git-pair.sh [![Build Status](https://travis-ci.org/spinningarrow/git-pair.sh.svg?branch=master)](https://travis-ci.org/spinningarrow/git-pair.sh)
 
 Bash-only git pairing script. No external dependencies on Ruby, Python, Node, or anything else.
 
