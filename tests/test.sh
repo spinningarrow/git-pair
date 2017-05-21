@@ -8,7 +8,14 @@ t() {
 }
 
 t "exits 1 when run without arguments"
-! git pair
+(! git pair >/dev/null)
+
+t "prints help when run without arguments"
+output=$(! git pair)
+echo $output | grep Usage >/dev/null
+
+t "'help' prints something helpful"
+git pair help | grep Usage >/dev/null
 
 t "'add' creates ~/.gitpairables with one entry"
 expect /tests/expect_add_test.exp >/dev/null

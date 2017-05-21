@@ -2,6 +2,12 @@
 
 PAIRS_CONFIG_PATH=~/.gitpairables
 
+git_pair_help () {
+	echo "Usage:"
+	echo "  git pair [ list | add | help ]"
+	echo "  git pair set <nickname-1> [<nickname-2> ... <nickname-n>]"
+}
+
 git_pair_list () {
 	cat $PAIRS_CONFIG_PATH
 	exit $?
@@ -63,7 +69,13 @@ git_pair_set () {
 command=$1
 
 if [ -z "$command" ]; then
+	git_pair_help
 	exit 1
+fi
+
+if [ $command = 'help' ]; then
+	git_pair_help
+	exit 0
 fi
 
 if [ $command = 'list' ] || [ $command = 'ls' ]; then
