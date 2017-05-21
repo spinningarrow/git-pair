@@ -4,7 +4,7 @@ PAIRS_CONFIG_PATH=~/.gitpairables
 
 git_pair_help () {
 	echo "Usage:"
-	echo "  git pair [ list | add | reset | help ]"
+	echo "  git pair [ list | add | reset | show | help ]"
 	echo "  git pair set <nickname-1> [<nickname-2> ... <nickname-n>]"
 }
 
@@ -113,6 +113,12 @@ fi
 
 if [ $command = 'reset' ]; then
 	git_pair_reset
+fi
+
+if [ $command = 'show' ]; then
+	git config --get user.name
+	git config --get user.email
+	exit $?
 fi
 
 exit 1
