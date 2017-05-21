@@ -10,7 +10,7 @@ Copy the `git-pair` script somewhere on your `$PATH`.
 NOTE: Make sure to keep the name `git-pair` (no extension) so git can use it as
 a subcommand.
 
-## Usage
+## Use
 
 - See usage information:
 
