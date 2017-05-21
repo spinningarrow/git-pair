@@ -1,12 +1,14 @@
-# git-pair.sh [![Build Status](https://travis-ci.org/spinningarrow/git-pair.sh.svg?branch=master)](https://travis-ci.org/spinningarrow/git-pair.sh)
+# git-pair.sh [![Build Status][travis-image]][travis-link]
 
-Bash-only git pairing script. No external dependencies on Ruby, Python, Node, or any other runtime.
+Bash-only git pairing script. No external dependencies on Ruby, Python, Node,
+or any other runtime.
 
 ## Install
 
 Copy the `git-pair` script somewhere on your `$PATH`.
 
-NOTE: Make sure to keep the name `git-pair` (no extension) so git can use it as a subcommand.
+NOTE: Make sure to keep the name `git-pair` (no extension) so git can use it as
+a subcommand.
 
 ## Usage
 
@@ -30,7 +32,8 @@ NOTE: Make sure to keep the name `git-pair` (no extension) so git can use it as 
     
   The nicknames are specified when adding a new person.
 
-  By default, the script sets the configs globally. To set locally instead, pass the `--local` flag to `set`, e.g.
+  By default, the script sets the configs globally. To set locally instead,
+  pass the `--local` flag to `set`, e.g.
 
         git pair set --local person1 person2
         
@@ -38,10 +41,14 @@ NOTE: Make sure to keep the name `git-pair` (no extension) so git can use it as 
 
         git pair reset
   
-  NOTE: This will only work if both `name` and `email` were set before `git pair` was used.
+  NOTE: This will only work if both `name` and `email` were set before `git
+  pair` was used.
   
 - Show who is currently pairing:
 
         git pair show
         
 Happy pairing!
+
+[travis-image]: https://travis-ci.org/spinningarrow/git-pair.sh.svg?branch=master
+[travis-link]: https://travis-ci.org/spinningarrow/git-pair.sh
