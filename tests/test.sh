@@ -32,3 +32,10 @@ expect /tests/expect_add_two.exp >/dev/null
 git pair set one two >/dev/null
 [ "$(git config --global --get user.name)" = 'One and Two' ]
 [ "$(git config --global --get user.email)" = 'one+two@one.com' ]
+
+t "'set' does nothing if the provided nicknames don't exist"
+original_name=$(! git pair --global --get user.name)
+original_email=$(! git pair --global --get user.email)
+! git pair set blah bleh
+[ $original_name = $(git pair --global --get user.name) ]
+[ $original_email = $(git pair --global --get user.email) ]
