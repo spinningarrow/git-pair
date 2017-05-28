@@ -22,6 +22,8 @@ git_pair_add () {
 	read -p 'Name: ' name
 	read -p 'Email: ' email
 
+	grep -i ^$nickname, $PAIRS_CONFIG_PATH >/dev/null && exit 1
+
 	echo "$nickname,$name,$email" >> $PAIRS_CONFIG_PATH
 	exit $?
 }
