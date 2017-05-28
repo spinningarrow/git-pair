@@ -55,7 +55,7 @@ git pair set OnE tWo >/dev/null
 t "'set' does nothing if the provided nicknames don't exist"
 original_name=$(git config --global --get user.name)
 original_email=$(git config --global --get user.email)
-! git pair set blah bleh
+! git pair set blah bleh &>/dev/null
 [ "$original_name" = "$(git config --global --get user.name)" ]
 [ "$original_email" = "$(git config --global --get user.email)" ]
 
