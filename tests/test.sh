@@ -4,6 +4,7 @@ set -e
 set -o pipefail
 
 t() {
+	[ -e ~/.gitpairables ] && rm ~/.gitpairables
 	echo -e "test: \033[1;32m$1\033[0m"
 }
 
@@ -23,7 +24,6 @@ expect /tests/expect_add_test.exp >/dev/null
 cat ~/.gitpairables | wc -l >/dev/null 2>&1
 
 t "'add' stores the original name and email if run the first time"
-[ -e ~/.gitpairables ] && rm ~/.gitpairables
 git config --global user.name 'Original Name'
 git config --global user.email 'original@email.com'
 expect /tests/expect_add_test.exp >/dev/null
@@ -53,7 +53,6 @@ original_email=$(git config --global --get user.email)
 [ "$original_email" = "$(git config --global --get user.email)" ]
 
 t "'reset' sets name and email back to the original settings"
-[ -e ~/.gitpairables ] && rm ~/.gitpairables
 git config --global user.name 'Original Name'
 git config --global user.email 'original@email.com'
 expect /tests/expect_add_one.exp >/dev/null
@@ -63,7 +62,6 @@ git pair reset >/dev/null
 [ "$(git config --get --global user.email)" = 'original@email.com' ]
 
 t "'reset' exits 1 if there is no original name set"
-[ -e ~/.gitpairables ] && rm ~/.gitpairables
 git config --global --unset user.name
 git config --global --unset user.email
 expect /tests/expect_add_one.exp >/dev/null
