@@ -45,6 +45,13 @@ git pair set one two >/dev/null
 [ "$(git config --global --get user.name)" = 'One and Two' ]
 [ "$(git config --global --get user.email)" = 'one+two@one.com' ]
 
+t "'set' ignores the case of pair nicknames"
+expect /tests/expect_add_one.exp >/dev/null
+expect /tests/expect_add_two.exp >/dev/null
+git pair set OnE tWo >/dev/null
+[ "$(git config --global --get user.name)" = 'One and Two' ]
+[ "$(git config --global --get user.email)" = 'one+two@one.com' ]
+
 t "'set' does nothing if the provided nicknames don't exist"
 original_name=$(git config --global --get user.name)
 original_email=$(git config --global --get user.email)
