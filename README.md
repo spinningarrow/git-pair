@@ -51,8 +51,19 @@ your `$PATH`.
 
         git pair show
 
-Happy pairing!
+## Alternatives
+
+- [therubymug/hitch][]
+- [pivotal/git_scripts][]
+- [git-duet][]
+- [square/pair][]
 
 [travis-image]: https://travis-ci.org/spinningarrow/git-pair.sh.svg?branch=master
 [travis-link]: https://travis-ci.org/spinningarrow/git-pair.sh
 [homebrew]: https://brew.sh/
+[therubymug/hitch]: https://github.com/therubymug/hitch
+[pivotal/git_scripts]: https://github.com/pivotal/git_scripts
+[git-duet]: https://github.com/git-duet/git-duet
+[square/pair]: https://github.com/square/pair
+
+Happy pairing!
