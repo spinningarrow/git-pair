@@ -58,8 +58,8 @@ your `$PATH`.
 - [git-duet][]
 - [square/pair][]
 
-[travis-image]: https://travis-ci.org/spinningarrow/git-pair.sh.svg?branch=master
-[travis-link]: https://travis-ci.org/spinningarrow/git-pair.sh
+[travis-image]: https://travis-ci.org/spinningarrow/git-pair.svg?branch=master
+[travis-link]: https://travis-ci.org/spinningarrow/git-pair
 [homebrew]: https://brew.sh/
 [therubymug/hitch]: https://github.com/therubymug/hitch
 [pivotal/git_scripts]: https://github.com/pivotal/git_scripts
