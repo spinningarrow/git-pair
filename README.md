@@ -7,8 +7,7 @@ or any other runtime.
 
 On macOS with [homebrew][]:
 
-    brew tap spinningarrow/tap
-    brew install git-pair
+    brew install spinningarrow/tap/git-pair
 
 On other OSes and package managers, copy the `git-pair` script somewhere on
 your `$PATH`.
