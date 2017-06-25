@@ -6,6 +6,14 @@ git_pair_help () {
 	echo "Usage:"
 	echo "  git pair [ list | add | reset | show | help ]"
 	echo "  git pair set <nickname-1> [<nickname-2> ... <nickname-n>]"
+	echo
+	echo "Commands:"
+	echo -e "  add\t\tinteractively add a new person's details"
+	echo -e "  list\t\tlist existing pairs"
+	echo -e "  show\t\tshow the current author name and email"
+	echo -e "  set\t\tset specified nicknames as the authors"
+	echo -e "  reset\t\tchange author settings back to the original"
+	echo -e "  help\t\tprint this information"
 }
 
 git_pair_list () {
