@@ -40,7 +40,7 @@ git_pair_store_original () {
 	name=$(git config --get --global user.name)
 	email=$(git config --get --global user.email)
 
-	if [ -z $name ] || [ -z $email ]; then
+	if [ -z "$name" ] || [ -z "$email" ]; then
 		return
 	fi
 
