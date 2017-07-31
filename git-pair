@@ -79,7 +79,13 @@ git_pair_set () {
 	emails=()
 
 	for nick in ${pair_nicks[*]}; do
-		found_line=$(grep -i ^$nick, $PAIRS_CONFIG_PATH) || exit 1
+		found_line=$(grep -i ^$nick, $PAIRS_CONFIG_PATH)
+
+		if [ -z "$found_line" ]; then
+			>&2 echo "${nick} is not a valid nickname; use ${bold}git pair add${normal} to add it."
+			exit 1
+		fi
+
 		names+=("`echo $found_line | cut -d',' -f2`")
 		emails+=("`echo $found_line | cut -d',' -f3`")
 	done
@@ -106,7 +112,7 @@ git_pair_set_and_show () {
 }
 
 git_pair_reset () {
-	git_pair_set __original__
+	git_pair_set __original__ 2>/dev/null
 	git_pair_show
 }
 
