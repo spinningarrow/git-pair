@@ -96,11 +96,16 @@ git_pair_set () {
 	email_host=`echo ${emails[0]} | cut -d@ -f2`
 
 	if $is_local; then
+		echo "Updated ${bold}local${normal} git config:"
+		echo
 		git config user.name "$names_joined"
 		git config user.email "$email_ids@$email_host"
 	else
 		git config --unset user.name &> /dev/null
 		git config --unset user.email &> /dev/null
+
+		echo "Updated ${bold}global${normal} git config (use --local to set locally instead):"
+		echo
 		git config --global user.name "$names_joined"
 		git config --global user.email "$email_ids@$email_host"
 	fi
@@ -112,7 +117,7 @@ git_pair_set_and_show () {
 }
 
 git_pair_reset () {
-	git_pair_set __original__ 2>/dev/null
+	git_pair_set __original__ &>/dev/null
 	git_pair_show
 }
 
