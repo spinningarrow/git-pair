@@ -27,7 +27,7 @@ t "'add' stores the original name and email if run the first time"
 git config --global user.name 'Original Name'
 git config --global user.email 'original@email.com'
 expect /tests/expect_add_test.exp >/dev/null
-git pair list | grep __original__ >/dev/null
+cat ~/.gitpairables | grep __original__ >/dev/null
 
 t "'add' does not re-add if the nickname already exists"
 expect /tests/expect_add_test.exp >/dev/null

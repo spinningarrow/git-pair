@@ -17,7 +17,7 @@ git_pair_help () {
 }
 
 git_pair_list () {
-	cat $PAIRS_CONFIG_PATH
+	cat $PAIRS_CONFIG_PATH | grep -v __original__
 	exit $?
 }
 
