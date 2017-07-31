@@ -2,6 +2,11 @@
 
 PAIRS_CONFIG_PATH=~/.gitpairables
 
+if which tput; then
+	bold=$(tput bold)
+	normal=$(tput sgr0)
+fi
+
 git_pair_help () {
 	echo "Usage:"
 	echo "  git pair [ list | add | reset | show | help ]"
@@ -17,7 +22,14 @@ git_pair_help () {
 }
 
 git_pair_list () {
-	cat $PAIRS_CONFIG_PATH | grep -v __original__
+	echo The following nicknames have been added:
+	echo
+
+	cat <(echo Nickname,Name,Email) $PAIRS_CONFIG_PATH 2>/dev/null | grep -v __original__ | column -s, -t
+
+	echo
+	echo Use ${bold}git pair add${normal} to add more.
+
 	exit $?
 }
 

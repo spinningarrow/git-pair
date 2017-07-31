@@ -32,7 +32,7 @@ cat ~/.gitpairables | grep __original__ >/dev/null
 t "'add' does not re-add if the nickname already exists"
 expect /tests/expect_add_test.exp >/dev/null
 expect /tests/expect_add_test_different_case.exp >/dev/null
-[ $(git pair list | grep test | wc -l | tr -d ' ') = 1 ]
+[ $(cat ~/.gitpairables | grep test | wc -l | tr -d ' ') = 1 ]
 
 t "'list' prints details of pairs"
 expect /tests/expect_add_test.exp >/dev/null
