@@ -61,15 +61,15 @@ git_pair_store_original () {
 }
 
 git_pair_set () {
-	if [ -z $2 ]; then
+	if [ -z $1 ]; then
 		exit 1
 	fi
 
-	if [ $2 = '--local' ]; then
-		num_args_to_drop=3
+	if [ $1 = '--local' ]; then
+		num_args_to_drop=2
 		is_local=true
 	else
-		num_args_to_drop=2
+		num_args_to_drop=1
 		is_local=false
 	fi
 
@@ -105,7 +105,7 @@ git_pair_set () {
 }
 
 git_pair_reset () {
-	git pair set __original__
+	git_pair_set __original__
 	exit $?
 }
 
@@ -130,7 +130,7 @@ if [ $command = 'add' ]; then
 fi
 
 if [ $command = 'set' ]; then
-	git_pair_set "$@"
+	git_pair_set "${@:2}"
 fi
 
 if [ $command = 'reset' ]; then
