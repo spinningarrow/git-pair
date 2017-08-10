@@ -2,7 +2,7 @@
 
 PAIRS_CONFIG_PATH=~/.gitpairables
 
-if which tput; then
+if which tput >/dev/null 2>&1; then
 	bold=$(tput bold)
 	normal=$(tput sgr0)
 fi
