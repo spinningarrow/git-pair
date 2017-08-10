@@ -98,15 +98,16 @@ git_pair_set () {
 		git config --global user.name "$names_joined"
 		git config --global user.email "$email_ids@$email_host"
 	fi
+}
 
-	git config --get user.name
-	git config --get user.email
-	exit $?
+git_pair_set_and_show () {
+	git_pair_set "$@"
+	git_pair_show
 }
 
 git_pair_reset () {
 	git_pair_set __original__
-	exit $?
+	git_pair_show
 }
 
 git_pair_show () {
@@ -136,7 +137,7 @@ if [ $command = 'add' ]; then
 fi
 
 if [ $command = 'set' ]; then
-	git_pair_set "${@:2}"
+	git_pair_set_and_show "${@:2}"
 fi
 
 if [ $command = 'reset' ]; then
