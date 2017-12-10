@@ -35,7 +35,7 @@ git_pair_list () {
 
 git_pair_add () {
 	if [ ! -e $PAIRS_CONFIG_PATH ]; then
-		git_pair_store_original
+		_git_pair_store_original
 	fi
 
 	read -p 'Nickname: ' nickname
@@ -48,7 +48,7 @@ git_pair_add () {
 	exit $?
 }
 
-git_pair_store_original () {
+_git_pair_store_original () {
 	name=$(git config --get --global user.name)
 	email=$(git config --get --global user.email)
 
@@ -58,6 +58,49 @@ git_pair_store_original () {
 
 	nickname="__original__"
 	echo "$nickname,$name,$email" >> $PAIRS_CONFIG_PATH
+}
+
+_git_pair_construct_names_and_emails () {
+	local pair_nicks="$@"
+	local names=()
+	local emails=()
+
+	for nick in ${pair_nicks[*]}; do
+		local found_line=$(grep -i ^$nick, $PAIRS_CONFIG_PATH)
+
+		if [ -z "$found_line" ]; then
+			>&2 echo "${nick} is not a valid nickname; use ${bold}git pair add${normal} to add it."
+			exit 1
+		fi
+
+		names+=("`echo $found_line | cut -d',' -f2`")
+		emails+=("`echo $found_line | cut -d',' -f3`")
+	done
+
+	local names_joined=`printf "%s\n" "${names[@]}" | paste -d+ -s - | sed 's/+/ and /g'`
+
+	local email_ids=`printf "%s\n" "${emails[@]}" | cut -d@ -f1 | paste -d+ -s -`
+	local email_host=`echo ${emails[0]} | cut -d@ -f2`
+
+	echo $names_joined
+	echo "$email_ids@$email_host"
+}
+
+_git_pair_set_local () {
+	echo "Updated ${bold}local${normal} git config:"
+	echo
+	git config user.name "$1"
+	git config user.email "$2"
+}
+
+_git_pair_set_global () {
+	git config --unset user.name &> /dev/null
+	git config --unset user.email &> /dev/null
+
+	echo "Updated ${bold}global${normal} git config (use --local to set locally instead):"
+	echo
+	git config --global user.name "$names"
+	git config --global user.email "$emails"
 }
 
 git_pair_set () {
@@ -73,41 +116,17 @@ git_pair_set () {
 		is_local=false
 	fi
 
-	pair_nicks=(${@:$num_args_to_drop})
+	local names_and_emails=$(_git_pair_construct_names_and_emails "${@:$num_args_to_drop}")
+	local names=$(echo "$names_and_emails" | head -1)
+	local emails=$(echo "$names_and_emails" | tail -1)
 
-	names=()
-	emails=()
-
-	for nick in ${pair_nicks[*]}; do
-		found_line=$(grep -i ^$nick, $PAIRS_CONFIG_PATH)
-
-		if [ -z "$found_line" ]; then
-			>&2 echo "${nick} is not a valid nickname; use ${bold}git pair add${normal} to add it."
-			exit 1
-		fi
-
-		names+=("`echo $found_line | cut -d',' -f2`")
-		emails+=("`echo $found_line | cut -d',' -f3`")
-	done
-
-	names_joined=`printf "%s\n" "${names[@]}" | paste -d+ -s - | sed 's/+/ and /g'`
-
-	email_ids=`printf "%s\n" "${emails[@]}" | cut -d@ -f1 | paste -d+ -s -`
-	email_host=`echo ${emails[0]} | cut -d@ -f2`
+	[ -z "$names" ] && exit 1
+	[ -z "$emails" ] && exit 1
 
 	if $is_local; then
-		echo "Updated ${bold}local${normal} git config:"
-		echo
-		git config user.name "$names_joined"
-		git config user.email "$email_ids@$email_host"
+		_git_pair_set_local "$names" "$emails"
 	else
-		git config --unset user.name &> /dev/null
-		git config --unset user.email &> /dev/null
-
-		echo "Updated ${bold}global${normal} git config (use --local to set locally instead):"
-		echo
-		git config --global user.name "$names_joined"
-		git config --global user.email "$email_ids@$email_host"
+		_git_pair_set_global "$names" "$emails"
 	fi
 }
 
