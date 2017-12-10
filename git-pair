@@ -127,36 +127,33 @@ git_pair_show () {
 	exit $?
 }
 
-command=$1
+case "$1" in
+	help)
+		git_pair_help
+		exit 0
+		;;
 
-if [ -z "$command" ]; then
-	git_pair_help
-	exit 1
-fi
+	list)
+		git_pair_list
+		;;
 
-if [ $command = 'help' ]; then
-	git_pair_help
-	exit 0
-fi
+	add)
+		git_pair_add
+		;;
 
-if [ $command = 'list' ] || [ $command = 'ls' ]; then
-	git_pair_list
-fi
+	set)
+		git_pair_set_and_show "${@:2}"
+		;;
 
-if [ $command = 'add' ]; then
-	git_pair_add
-fi
+	reset)
+		git_pair_reset
+		;;
 
-if [ $command = 'set' ]; then
-	git_pair_set_and_show "${@:2}"
-fi
+	show)
+		git_pair_show
+		;;
 
-if [ $command = 'reset' ]; then
-	git_pair_reset
-fi
-
-if [ $command = 'show' ]; then
-	git_pair_show
-fi
-
-exit 1
+	*)
+		git_pair_help
+		exit 1
+esac
