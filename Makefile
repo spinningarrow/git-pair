@@ -6,7 +6,7 @@ test: docker
 shell: docker
 	docker run -it --rm -v $(shell pwd)/tests:/tests --entrypoint bash git-pair-test
 
-docker: Dockerfile
+docker: Dockerfile git-pair
 	docker build -t git-pair-test .
 	touch docker
 
