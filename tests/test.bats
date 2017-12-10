@@ -6,6 +6,7 @@ teardown() {
 	if [ -e ~/.gitpairables ]; then rm ~/.gitpairables; fi
 }
 
+# no subcommand
 @test "exits 1 when run without arguments" {
 	run git pair
 
@@ -18,12 +19,14 @@ teardown() {
 	[ "${lines[0]}" = "Usage:" ]
 }
 
+# help
 @test "'help' prints something helpful" {
 	run git pair help
 
 	[ "${lines[0]}" = "Usage:" ]
 }
 
+# add
 @test "'add' creates ~/.gitpairables with one entry" {
 	run expect /tests/expect_add_test.exp
 
@@ -45,6 +48,7 @@ teardown() {
 	[ "$(cat ~/.gitpairables | grep test | wc -l | tr -d ' ')" -eq 1 ]
 }
 
+# list
 @test "'list' prints details of pairs" {
 	run expect /tests/expect_add_test.exp
 	run git pair list
@@ -52,6 +56,23 @@ teardown() {
 	[ "$(echo ${lines[2]} | grep -o 'test@tester.com')" = "test@tester.com" ]
 }
 
+# show
+@test "'show' exits 1 if no author set" {
+	run git pair show
+
+	[ "$status" -eq 1 ]
+}
+
+@test "'show' prints currently set author(s)" {
+	git config --global user.name 'Test'
+	git config --global user.email 'test@test.com'
+	run git pair show
+
+	[ "${lines[0]}" = "Test" ]
+	[ "${lines[1]}" = "test@test.com" ]
+}
+
+# set
 @test "'set' changes global config to provided pairs" {
 	run expect /tests/expect_add_one.exp
 	run expect /tests/expect_add_two.exp
@@ -79,6 +100,7 @@ teardown() {
 	[ "$(git config --global --get user.email)" = "original@local" ]
 }
 
+# reset
 @test "'reset' sets name and email back to the original settings" {
 	run git config --global user.name 'Original Name'
 	run git config --global user.email 'original@email.com'
