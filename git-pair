@@ -29,8 +29,6 @@ git_pair_list () {
 
 	echo
 	echo Use ${bold}git pair add${normal} to add more.
-
-	exit $?
 }
 
 git_pair_add () {
@@ -45,7 +43,6 @@ git_pair_add () {
 	grep -i ^$nickname, $PAIRS_CONFIG_PATH >/dev/null 2>&1 && exit 1
 
 	echo "$nickname,$name,$email" >> $PAIRS_CONFIG_PATH
-	exit $?
 }
 
 _store_original () {
@@ -143,36 +140,31 @@ git_pair_reset () {
 git_pair_show () {
 	git config --get user.name
 	git config --get user.email
-	exit $?
 }
 
 case "$1" in
 	help)
-		git_pair_help
-		exit 0
-		;;
+		git_pair_help ;;
 
 	list)
-		git_pair_list
-		;;
+		git_pair_list ;;
 
 	add)
-		git_pair_add
-		;;
+		git_pair_add ;;
 
 	set)
-		git_pair_set "${@:2}"
-		;;
+		git_pair_set "${@:2}" ;;
 
 	reset)
-		git_pair_reset
-		;;
+		git_pair_reset ;;
 
 	show)
-		git_pair_show
-		;;
+		git_pair_show ;;
 
 	*)
 		git_pair_help
 		exit 1
+		;;
 esac
+
+exit $?
