@@ -35,7 +35,7 @@ git_pair_list () {
 
 git_pair_add () {
 	if [ ! -e $PAIRS_CONFIG_PATH ]; then
-		_git_pair_store_original
+		_store_original
 	fi
 
 	read -p 'Nickname: ' nickname
@@ -48,7 +48,7 @@ git_pair_add () {
 	exit $?
 }
 
-_git_pair_store_original () {
+_store_original () {
 	name=$(git config --get --global user.name)
 	email=$(git config --get --global user.email)
 
@@ -60,7 +60,7 @@ _git_pair_store_original () {
 	echo "$nickname,$name,$email" >> $PAIRS_CONFIG_PATH
 }
 
-_git_pair_construct_names_and_emails () {
+_construct_names_and_emails () {
 	local pair_nicks="$@"
 	local names=()
 	local emails=()
@@ -86,14 +86,14 @@ _git_pair_construct_names_and_emails () {
 	echo "$email_ids@$email_host"
 }
 
-_git_pair_set_local () {
+_set_local () {
 	echo "Updated ${bold}local${normal} git config:"
 	echo
 	git config user.name "$1"
 	git config user.email "$2"
 }
 
-_git_pair_set_global () {
+_set_global () {
 	git config --unset user.name &> /dev/null
 	git config --unset user.email &> /dev/null
 
@@ -103,7 +103,7 @@ _git_pair_set_global () {
 	git config --global user.email "$emails"
 }
 
-git_pair_set () {
+_set_pairs () {
 	if [ -z $1 ]; then
 		exit 1
 	fi
@@ -116,7 +116,7 @@ git_pair_set () {
 		is_local=false
 	fi
 
-	local names_and_emails=$(_git_pair_construct_names_and_emails "${@:$num_args_to_drop}")
+	local names_and_emails=$(_construct_names_and_emails "${@:$num_args_to_drop}")
 	local names=$(echo "$names_and_emails" | head -1)
 	local emails=$(echo "$names_and_emails" | tail -1)
 
@@ -124,19 +124,19 @@ git_pair_set () {
 	[ -z "$emails" ] && exit 1
 
 	if $is_local; then
-		_git_pair_set_local "$names" "$emails"
+		_set_local "$names" "$emails"
 	else
-		_git_pair_set_global "$names" "$emails"
+		_set_global "$names" "$emails"
 	fi
 }
 
-git_pair_set_and_show () {
-	git_pair_set "$@"
+git_pair_set () {
+	_set_pairs "$@"
 	git_pair_show
 }
 
 git_pair_reset () {
-	git_pair_set __original__ &>/dev/null
+	_set_pairs __original__ &>/dev/null
 	git_pair_show
 }
 
@@ -161,7 +161,7 @@ case "$1" in
 		;;
 
 	set)
-		git_pair_set_and_show "${@:2}"
+		git_pair_set "${@:2}"
 		;;
 
 	reset)
