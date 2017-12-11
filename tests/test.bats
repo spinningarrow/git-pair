@@ -1,8 +1,15 @@
 #!/usr/bin/env bats
 
+setup () {
+	run mkdir -p $BATS_TMPDIR/$BATS_TEST_NAME
+	run git init $BATS_TMPDIR/$BATS_TEST_NAME
+	cd $BATS_TMPDIR/$BATS_TEST_NAME
+}
+
 teardown() {
 	git config --global --unset user.name
 	git config --global --unset user.email
+	cd /
 	if [ -e ~/.gitpairables ]; then rm ~/.gitpairables; fi
 }
 
@@ -73,7 +80,9 @@ teardown() {
 }
 
 # set
-@test "'set' changes global config to provided pairs" {
+@test "'set' changes global config to provided pairs when user is set globally" {
+	git config --global user.name something
+	git config --global user.email something@something.com
 	run expect /tests/expect_add_one.exp
 	run expect /tests/expect_add_two.exp
 	run git pair set one two
@@ -82,13 +91,45 @@ teardown() {
 	[ "$(git config --global --get user.email)" = 'one+two@one.com' ]
 }
 
+@test "'set' changes local config to provided pairs when user is set locally" {
+	run git config user.name something
+	run git config user.email something@something.com
+	run expect /tests/expect_add_one.exp
+	run expect /tests/expect_add_two.exp
+	run git pair set one two
+
+	[ "$(git config --local user.name)" = 'One and Two' ]
+	[ "$(git config --local user.email)" = 'one+two@one.com' ]
+}
+
+@test "set: changes config based on location of original config" {
+	run git config --global user.name something
+	run git config user.email something@something.com
+	run expect /tests/expect_add_one.exp
+	run expect /tests/expect_add_two.exp
+	run git pair set one two
+
+	[ "$(git config --global user.name)" = 'One and Two' ]
+	[ "$(git config --local user.email)" = 'one+two@one.com' ]
+}
+
+@test "set: changes local config when either name or email are not set at all" {
+	run git config --global user.name something
+	run expect /tests/expect_add_one.exp
+	run expect /tests/expect_add_two.exp
+	run git pair set one two
+
+	[ "$(git config --local user.name)" = 'One and Two' ]
+	[ "$(git config --local user.email)" = 'one+two@one.com' ]
+}
+
 @test "'set' ignores the case of pair nicknames" {
 	run expect /tests/expect_add_one.exp
 	run expect /tests/expect_add_two.exp
 	run git pair set OnE tWo
 
-	[ "$(git config --global --get user.name)" = 'One and Two' ]
-	[ "$(git config --global --get user.email)" = 'one+two@one.com' ]
+	[ "$(git config user.name)" = 'One and Two' ]
+	[ "$(git config user.email)" = 'one+two@one.com' ]
 }
 
 @test "'set' does nothing if the provided nicknames don't exist" {

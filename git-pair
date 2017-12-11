@@ -83,35 +83,12 @@ _construct_names_and_emails () {
 	echo "$email_ids@$email_host"
 }
 
-_set_local () {
-	echo "Updated ${bold}local${normal} git config:"
-	echo
-	git config user.name "$1"
-	git config user.email "$2"
-}
-
-_set_global () {
-	git config --unset user.name &> /dev/null
-	git config --unset user.email &> /dev/null
-
-	echo "Updated ${bold}global${normal} git config (use --local to set locally instead):"
-	echo
-	git config --global user.name "$names"
-	git config --global user.email "$emails"
-}
-
 _set_pairs () {
 	if [ -z $1 ]; then
 		exit 1
 	fi
 
-	if [ $1 = '--local' ]; then
-		num_args_to_drop=2
-		is_local=true
-	else
-		num_args_to_drop=1
-		is_local=false
-	fi
+	local num_args_to_drop=1
 
 	local names_and_emails=$(_construct_names_and_emails "${@:$num_args_to_drop}")
 	local names=$(echo "$names_and_emails" | head -1)
@@ -120,10 +97,20 @@ _set_pairs () {
 	[ -z "$names" ] && exit 1
 	[ -z "$emails" ] && exit 1
 
-	if $is_local; then
-		_set_local "$names" "$emails"
+	local name_origin email_origin origins=$(_get_origins)
+	if [ $(echo "$origins" | wc -l | tr -d ' ') -eq 2 ]; then
+		name_origin=$(echo "$origins" | head -1)
+		email_origin=$(echo "$origins" | tail -1)
 	else
-		_set_global "$names" "$emails"
+		name_origin=".git/config"
+		email_origin=".git/config"
+	fi
+
+	git config --file $name_origin user.name "$names"
+	git config --file $email_origin user.email "$emails"
+
+	if [ $? -ne 0 ]; then
+		echo Unable to set git config. Are you in a git directory?
 	fi
 }
 
@@ -138,8 +125,13 @@ git_pair_reset () {
 }
 
 git_pair_show () {
-	git config --get user.name
-	git config --get user.email
+	git config user.name
+	git config user.email
+}
+
+_get_origins () {
+	git config --show-origin user.name | grep -e '^file:' | cut -f1 | cut -d':' -f2
+	git config --show-origin user.email | grep -e '^file:' | cut -f1 | cut -d':' -f2
 }
 
 case "$1" in
@@ -160,6 +152,9 @@ case "$1" in
 
 	show)
 		git_pair_show ;;
+
+	test)
+		_get_origins ;;
 
 	*)
 		git_pair_help
