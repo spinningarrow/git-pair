@@ -3,6 +3,10 @@
 Bash-only git pairing script. No external dependencies on Ruby, Python, Node,
 or any other runtime.
 
+**Archived**: This repository is no longer maintained since my git pairing
+needs are now met by [git-coauthors][], which is stateless and more flexible
+in comparison.
+
 ## Install
 
 On macOS with [homebrew][]:
@@ -66,3 +70,5 @@ your `$PATH`.
 [square/pair]: https://github.com/square/pair
 
 Happy pairing!
+
+[git-coauthors]: https://github.com/spinningarrow/git-coauthors
